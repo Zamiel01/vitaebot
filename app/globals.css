@@ -121,3 +121,15 @@
     @apply bg-background text-foreground;
   }
 }
+/* Added custom pink theme colors and smooth transitions */
+.text-pink-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-pink-500;
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
