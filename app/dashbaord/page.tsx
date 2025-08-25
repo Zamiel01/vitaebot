@@ -18,8 +18,6 @@ import {
   Filter,
   MapPin,
   DollarSign,
-  Calendar,
-  RefreshCw,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
@@ -27,7 +25,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { motion, AnimatePresence } from "framer-motion"
@@ -315,7 +312,7 @@ export default function Dashboard() {
   }
 
   const handleCreateNewCV = () => {
-    router.push("/option")
+    router.push("/select")
   }
 
   const formatDate = (dateString: string | null) => {
@@ -428,29 +425,49 @@ export default function Dashboard() {
     )
   }
 
+  const handleChartClick = (event: any, elements: any) => {
+    if (elements.length > 0) {
+      const index = elements[0].index
+      const category = jobCategories[index][0]
+      setCategoryFilter(category.toLowerCase())
+      toast.success(`Filtered jobs by ${category}`)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-pink-50">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-pink-100 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                <FileText className="w-7 h-7 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                <FileText className="w-4 h-4 sm:w-7 sm:h-7 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">VitaeBot</h1>
-                <p className="text-sm text-gray-500">Professional Dashboard</p>
+              <div className="hidden sm:block">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">VitaeBot</h1>
+                <p className="text-xs sm:text-sm text-gray-500">Professional Dashboard</p>
               </div>
+              <h1 className="text-lg font-bold text-gray-900 sm:hidden">VitaeBot</h1>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Button
                 variant="ghost"
-                className="text-gray-600 hover:text-pink-600 hover:bg-pink-50"
+                size="sm"
+                className="text-gray-600 hover:text-pink-600 hover:bg-pink-50 hidden sm:flex"
                 onClick={() => router.back()}
               >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Back</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:text-pink-600 hover:bg-pink-50 sm:hidden p-2"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft className="w-4 h-4" />
               </Button>
 
               <div className="relative" ref={dropdownRef}>
@@ -458,21 +475,21 @@ export default function Dashboard() {
                   className="p-0 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center border-2 border-pink-300 shadow-md">
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center border-2 border-pink-300 shadow-md">
                     {user?.photoURL ? (
                       <img
                         src={user.photoURL || "/placeholder.svg"}
                         alt={user.displayName || "User"}
-                        className="h-10 w-10 rounded-full object-cover"
+                        className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-semibold text-pink-700">
+                      <span className="text-xs sm:text-sm font-semibold text-pink-700">
                         {user?.displayName ? (
                           user.displayName.charAt(0).toUpperCase()
                         ) : user?.email ? (
                           user.email.charAt(0).toUpperCase()
                         ) : (
-                          <User className="h-5 w-5" />
+                          <User className="h-4 w-4 sm:h-5 sm:w-5" />
                         )}
                       </span>
                     )}
@@ -485,14 +502,16 @@ export default function Dashboard() {
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden"
+                      className="absolute right-0 mt-2 w-56 sm:w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden"
                     >
-                      <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-pink-50 to-pink-100">
-                        <p className="text-sm font-semibold text-gray-900">{user?.displayName || "User"}</p>
-                        <p className="text-xs text-gray-600">{user?.email}</p>
+                      <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-100 bg-gradient-to-r from-pink-50 to-pink-100">
+                        <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                          {user?.displayName || "User"}
+                        </p>
+                        <p className="text-xs text-gray-600 truncate">{user?.email}</p>
                       </div>
                       <button
-                        className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 focus:outline-none transition-colors"
+                        className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-600 hover:bg-red-50 focus:outline-none transition-colors"
                         onClick={handleLogout}
                       >
                         Logout
@@ -506,18 +525,18 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-80px)]">
-        <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
-          <div className="p-6 space-y-6">
+      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)]">
+        <div className="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 lg:overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="text-center"
             >
-              <h2 className="text-xl font-bold text-gray-900 mb-2">CV Management</h2>
-              <p className="text-sm text-gray-600">
-                {cvData ? "Manage your existing CV or create a new one" : "Create your first CV to get started and win any job"}
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">CV Management</h2>
+              <p className="text-xs sm:text-sm text-gray-600">
+                {cvData ? "Manage your existing CV or create a new one" : "Create your first CV to get started"}
               </p>
             </motion.div>
 
@@ -528,46 +547,46 @@ export default function Dashboard() {
             >
               <Button
                 onClick={handleCreateNewCV}
-                className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white py-4 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
+                className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white py-4 sm:py-6 text-sm sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
               >
-                <Plus className="w-5 h-5 mr-2" />
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Create New CV
               </Button>
             </motion.div>
 
             {cvData && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
-                <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-gradient-to-br from-white to-pink-50">
-                  <CardHeader className="pb-4">
+                <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader className="pb-3 sm:pb-4">
                     <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg font-bold text-gray-900">
+                      <CardTitle className="text-base sm:text-xl font-bold">
                         {cvData.selectedTemplate === "james-watson" ? "Professional" : "Internship"} CV
                       </CardTitle>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 sm:h-auto sm:w-auto"
                         onClick={handleDeleteCV}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </div>
-                    <CardDescription className="text-xs">
+                    <CardDescription className="text-xs sm:text-sm">
                       Last updated: {formatDate(cvData.lastUpdated)}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col">
-                      <div className="flex items-center justify-center h-24 bg-pink-100 rounded-lg mb-4">
-                        <File className="w-10 h-10 text-pink-500" />
+                      <div className="flex items-center justify-center h-24 sm:h-32 bg-pink-50 rounded-lg mb-3 sm:mb-4">
+                        <File className="w-8 h-8 sm:w-12 sm:h-12 text-pink-400" />
                       </div>
-                      <p className="text-center text-gray-600 text-sm mb-4">
+                      <p className="text-center text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
                         {cvData.selectedTemplate === "james-watson"
                           ? "Professional template for experienced applicants"
                           : "Internship template for students and fresh graduates"}
                       </p>
                       <Button
-                        className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white"
+                        className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white text-sm sm:text-base"
                         onClick={handleContinueCV}
                       >
                         Continue Editing
@@ -577,189 +596,94 @@ export default function Dashboard() {
                 </Card>
               </motion.div>
             )}
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-0">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold text-gray-700">Quick Stats</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">Total Jobs</span>
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                      {jobsData.length}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">Filtered Jobs</span>
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
-                      {filteredJobs.length}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">Categories</span>
-                    <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                      {jobCategories.length}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-6">
+        <div className="flex-1 lg:overflow-y-auto">
+          <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
+              <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <BarChart2 className="h-6 w-6 text-blue-600" />
-                      <div>
-                        <CardTitle className="text-xl">Trending Remote Jobs</CardTitle>
-                        <CardDescription className="text-sm">
-                          Top job categories based on current RemoteOK listings
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fetchJobs(true)}
-                      disabled={isRefreshing}
-                      className="border-blue-200 hover:bg-blue-50"
-                    >
-                      <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-                      Refresh
-                    </Button>
-                  </div>
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <BarChart2 className="h-4 w-4 sm:h-5 sm:w-5 text-pink-600" />
+                    Trending Remote Jobs
+                  </CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    Top job categories based on current RemoteOK listings
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {isJobsLoading ? (
-                    <div className="flex items-center justify-center h-64">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    <div className="flex items-center justify-center h-48 sm:h-64">
+                      <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-t-2 border-b-2 border-pink-500"></div>
                     </div>
                   ) : jobCategories.length > 0 ? (
-                    <div className="h-80 relative">
-                      <Bar
-                        data={chartData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          interaction: {
-                            mode: "index",
-                            intersect: false,
-                          },
-                          animation: {
-                            duration: 2000,
-                            easing: "easeInOutQuart",
-                            delay: (context) => context.dataIndex * 200,
-                          },
-                          hover: {
-                            animationDuration: 300,
-                          },
-                          onHover: (event, elements) => {
-                            const canvas = event.native?.target as HTMLCanvasElement
-                            if (canvas) {
-                              canvas.style.cursor = elements.length > 0 ? "pointer" : "default"
-                            }
-                          },
-                          onClick: (event, elements) => {
-                            if (elements.length > 0) {
-                              const index = elements[0].index
-                              const category = jobCategories[index][0]
-                              setCategoryFilter(category.toLowerCase())
-                              toast.success(`Filtered jobs by ${category}`)
-                            }
-                          },
-                          plugins: {
-                            legend: {
-                              display: false,
-                            },
-                            title: {
-                              display: false,
-                            },
-                            tooltip: {
-                              enabled: true,
-                              backgroundColor: "rgba(0, 0, 0, 0.9)",
-                              titleColor: "white",
-                              bodyColor: "white",
-                              borderColor: "rgba(255, 255, 255, 0.2)",
-                              borderWidth: 1,
-                              cornerRadius: 12,
-                              displayColors: true,
-                              padding: 12,
-                              titleFont: {
-                                size: 14,
-                                weight: "bold",
-                              },
-                              bodyFont: {
-                                size: 13,
-                              },
-                              callbacks: {
-                                title: (context) => {
-                                  return `${context[0].label} Jobs`
-                                },
-                                label: (context) => {
-                                  const value = context.parsed.y
-                                  const total = jobCategories.reduce((sum, cat) => sum + cat[1], 0)
-                                  const percentage = ((value / total) * 100).toFixed(1)
-                                  return [
-                                    `Count: ${value} positions`,
-                                    `Share: ${percentage}% of total`,
-                                    `Click to filter jobs`,
-                                  ]
+                    <div className="relative">
+                      <div className="h-48 sm:h-64 lg:h-80">
+                        <Bar
+                          data={chartData}
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            onClick: handleChartClick,
+                            plugins: {
+                              legend: {
+                                position: "top" as const,
+                                labels: {
+                                  font: {
+                                    size: window.innerWidth < 640 ? 10 : 12,
+                                  },
                                 },
                               },
-                            },
-                          },
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              grid: {
-                                color: "rgba(0, 0, 0, 0.05)",
-                                drawBorder: false,
-                              },
-                              ticks: {
-                                color: "rgba(0, 0, 0, 0.6)",
-                                font: {
-                                  size: 12,
-                                  weight: "500",
-                                },
-                                padding: 8,
-                              },
-                            },
-                            x: {
-                              grid: {
+                              title: {
                                 display: false,
                               },
-                              ticks: {
-                                color: "rgba(0, 0, 0, 0.7)",
-                                font: {
-                                  size: 12,
-                                  weight: "600",
+                              tooltip: {
+                                titleFont: {
+                                  size: window.innerWidth < 640 ? 12 : 14,
                                 },
-                                padding: 8,
-                                maxRotation: 45,
+                                bodyFont: {
+                                  size: window.innerWidth < 640 ? 11 : 13,
+                                },
                               },
                             },
-                          },
-                        }}
-                      />
-
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200">
-                        <div className="text-xs text-gray-600 mb-1">Total Categories</div>
-                        <div className="text-2xl font-bold text-gray-900">{jobCategories.length}</div>
-                        <div className="text-xs text-gray-500 mt-1">Click bars to filter</div>
+                            scales: {
+                              x: {
+                                ticks: {
+                                  font: {
+                                    size: window.innerWidth < 640 ? 9 : 11,
+                                  },
+                                },
+                              },
+                              y: {
+                                ticks: {
+                                  font: {
+                                    size: window.innerWidth < 640 ? 9 : 11,
+                                  },
+                                },
+                              },
+                            },
+                          }}
+                        />
                       </div>
+                      {!isJobsLoading && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 1 }}
+                          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        >
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 shadow-lg border text-center">
+                            <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+                              📊 {jobCategories.reduce((sum, cat) => sum + cat[1], 0)} jobs analyzed
+                            </p>
+                            <p className="text-xs text-gray-500">Click on bars to filter jobs by category</p>
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No job data available</p>
+                    <p className="text-center text-gray-500 py-8 text-sm">No job data available</p>
                   )}
                 </CardContent>
               </Card>
@@ -770,21 +694,15 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
             >
-              <Card className="shadow-lg border-0">
+              <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="h-6 w-6 text-green-600" />
-                      <div>
-                        <CardTitle className="text-xl">Remote Job Openings</CardTitle>
-                        <CardDescription className="text-sm">
-                          Showing {startIndex + 1}-{Math.min(endIndex, filteredJobs.length)} of {filteredJobs.length}{" "}
-                          jobs
-                          {filteredJobs.length !== jobsData.length && ` (filtered from ${jobsData.length} total)`}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </div>
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-pink-600" />
+                    Latest Remote Job Openings
+                  </CardTitle>
+                  <CardDescription className="text-xs sm:text-sm mb-4">
+                    Recent job postings from RemoteOK
+                  </CardDescription>
 
                   <div className="space-y-4">
                     <div className="relative">
@@ -793,14 +711,14 @@ export default function Dashboard() {
                         placeholder="Search jobs, companies, or skills..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 border-gray-200 focus:border-pink-300 focus:ring-pink-200"
+                        className="pl-10 border-gray-200 text-sm"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                       <Select value={locationFilter} onValueChange={setLocationFilter}>
-                        <SelectTrigger className="border-gray-200">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                        <SelectTrigger className="border-gray-200 text-sm">
+                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-400" />
                           <SelectValue placeholder="Location" />
                         </SelectTrigger>
                         <SelectContent>
@@ -813,8 +731,8 @@ export default function Dashboard() {
                       </Select>
 
                       <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                        <SelectTrigger className="border-gray-200">
-                          <Filter className="h-4 w-4 mr-2 text-gray-400" />
+                        <SelectTrigger className="border-gray-200 text-sm">
+                          <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-400" />
                           <SelectValue placeholder="Category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -823,12 +741,16 @@ export default function Dashboard() {
                           <SelectItem value="designer">Designer</SelectItem>
                           <SelectItem value="manager">Manager</SelectItem>
                           <SelectItem value="engineer">Engineer</SelectItem>
+                          <SelectItem value="marketing">Marketing</SelectItem>
+                          <SelectItem value="sales">Sales</SelectItem>
+                          <SelectItem value="finance">Finance</SelectItem>
+                          <SelectItem value="hr">HR</SelectItem>
                         </SelectContent>
                       </Select>
 
                       <Select value={salaryFilter} onValueChange={setSalaryFilter}>
-                        <SelectTrigger className="border-gray-200">
-                          <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
+                        <SelectTrigger className="border-gray-200 text-sm sm:col-span-2 lg:col-span-1">
+                          <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-400" />
                           <SelectValue placeholder="Salary" />
                         </SelectTrigger>
                         <SelectContent>
@@ -844,140 +766,139 @@ export default function Dashboard() {
                 <CardContent>
                   {isJobsLoading ? (
                     <div className="flex items-center justify-center h-32">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+                      <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-t-2 border-b-2 border-green-500"></div>
                     </div>
                   ) : currentJobs.length > 0 ? (
                     <>
-                      <div className="space-y-4 mb-6">
+                      <div className="space-y-3 sm:space-y-4">
                         {currentJobs.map((job, index) => (
                           <motion.div
                             key={job.id || index}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.02 }}
-                            className="p-4 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-white to-gray-50"
+                            transition={{ delay: index * 0.05 }}
+                            className="p-3 sm:p-4 border rounded-lg hover:shadow-md transition-shadow bg-white"
                           >
-                            <div className="flex justify-between items-start mb-3">
-                              <div className="flex-1">
-                                <h3 className="font-semibold text-lg text-gray-900 mb-1">{job.title}</h3>
-                                <p className="text-sm text-gray-600 mb-2">{job.company}</p>
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4">
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-sm sm:text-lg text-gray-900 truncate">
+                                  {job.title || "Untitled Position"}
+                                </h3>
+                                <p className="text-xs sm:text-sm text-gray-600 truncate">
+                                  {job.company || "Company not specified"}
+                                </p>
                               </div>
-                              <div className="flex flex-col items-end gap-2">
-                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                                  <MapPin className="h-3 w-3 mr-1" />
-                                  {job.location || "Remote"}
-                                </Badge>
-                                {job.salary && (
-                                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                                    <DollarSign className="h-3 w-3 mr-1" />
-                                    {job.salary}
-                                  </Badge>
+                              <span className="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded self-start whitespace-nowrap">
+                                {job.location || "Remote"}
+                              </span>
+                            </div>
+
+                            {job.tags && job.tags.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
+                                {job.tags.slice(0, window.innerWidth < 640 ? 2 : 3).map((tag: string, i: number) => (
+                                  <span
+                                    key={i}
+                                    className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded truncate"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                                {job.tags.length > (window.innerWidth < 640 ? 2 : 3) && (
+                                  <span className="text-xs text-gray-500">
+                                    +{job.tags.length - (window.innerWidth < 640 ? 2 : 3)} more
+                                  </span>
                                 )}
                               </div>
-                            </div>
+                            )}
 
-                            <div className="flex flex-wrap gap-2 mb-3">
-                              {job.tags &&
-                                job.tags.slice(0, 4).map((tag: string, i: number) => (
-                                  <Badge key={i} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              {job.tags && job.tags.length > 4 && (
-                                <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-500">
-                                  +{job.tags.length - 4} more
-                                </Badge>
-                              )}
-                            </div>
+                            {job.salary && (
+                              <p className="text-xs sm:text-sm text-green-600 font-medium mt-2 truncate">
+                                {job.salary}
+                              </p>
+                            )}
 
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center gap-2 text-xs text-gray-500">
-                                <Calendar className="h-3 w-3" />
-                                <span>{job.date}</span>
-                              </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                className="border-pink-200 text-pink-600 hover:bg-pink-50 bg-transparent"
+                            <div className="mt-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                              <a
+                                href={job.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs sm:text-sm text-pink-600 hover:underline font-medium"
                               >
-                                <a href={job.url} target="_blank" rel="noopener noreferrer">
-                                  View Job
-                                </a>
-                              </Button>
+                                View Job →
+                              </a>
+                              <span className="text-xs text-gray-500">{job.date}</span>
                             </div>
                           </motion.div>
                         ))}
                       </div>
 
                       {totalPages > 1 && (
-                        <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={handlePrevPage}
-                              disabled={currentPage === 1}
-                              className="border-gray-200 bg-transparent"
-                            >
-                              <ChevronLeft className="h-4 w-4 mr-1" />
-                              Previous
-                            </Button>
+                        <div className="mt-6 sm:mt-8">
+                          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <p className="text-xs sm:text-sm text-gray-600 order-2 sm:order-1">
+                              Showing {(currentPage - 1) * jobsPerPage + 1} to{" "}
+                              {Math.min(currentPage * jobsPerPage, filteredJobs.length)} of {filteredJobs.length} jobs
+                            </p>
 
-                            <div className="flex items-center gap-1">
-                              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                let pageNum
-                                if (totalPages <= 5) {
-                                  pageNum = i + 1
-                                } else if (currentPage <= 3) {
-                                  pageNum = i + 1
-                                } else if (currentPage >= totalPages - 2) {
-                                  pageNum = totalPages - 4 + i
-                                } else {
-                                  pageNum = currentPage - 2 + i
-                                }
+                            <div className="flex items-center gap-1 sm:gap-2 order-1 sm:order-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                                disabled={currentPage === 1}
+                                className="text-xs sm:text-sm px-2 sm:px-3"
+                              >
+                                <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline ml-1">Previous</span>
+                              </Button>
 
-                                return (
-                                  <Button
-                                    key={pageNum}
-                                    variant={currentPage === pageNum ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => handlePageChange(pageNum)}
-                                    className={`w-8 h-8 p-0 ${
-                                      currentPage === pageNum
-                                        ? "bg-pink-600 text-white border-pink-600"
-                                        : "border-gray-200"
-                                    }`}
-                                  >
-                                    {pageNum}
-                                  </Button>
-                                )
-                              })}
+                              <div className="flex gap-1">
+                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                  let pageNum
+                                  if (totalPages <= 5) {
+                                    pageNum = i + 1
+                                  } else if (currentPage <= 3) {
+                                    pageNum = i + 1
+                                  } else if (currentPage >= totalPages - 2) {
+                                    pageNum = totalPages - 4 + i
+                                  } else {
+                                    pageNum = currentPage - 2 + i
+                                  }
+
+                                  return (
+                                    <Button
+                                      key={pageNum}
+                                      variant={currentPage === pageNum ? "default" : "outline"}
+                                      size="sm"
+                                      onClick={() => setCurrentPage(pageNum)}
+                                      className="w-8 h-8 sm:w-10 sm:h-10 p-0 text-xs sm:text-sm"
+                                    >
+                                      {pageNum}
+                                    </Button>
+                                  )
+                                })}
+                              </div>
+
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                                disabled={currentPage === totalPages}
+                                className="text-xs sm:text-sm px-2 sm:px-3"
+                              >
+                                <span className="hidden sm:inline mr-1">Next</span>
+                                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </Button>
                             </div>
-
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={handleNextPage}
-                              disabled={currentPage === totalPages}
-                              className="border-gray-200 bg-transparent"
-                            >
-                              Next
-                              <ChevronRight className="h-4 w-4 ml-1" />
-                            </Button>
-                          </div>
-
-                          <div className="text-sm text-gray-500">
-                            Page {currentPage} of {totalPages}
                           </div>
                         </div>
                       )}
                     </>
                   ) : (
-                    <div className="text-center py-12">
-                      <Briefcase className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-500 text-lg">No jobs match your filters</p>
-                      <p className="text-gray-400 text-sm">Try adjusting your search criteria</p>
+                    <div className="text-center py-8 sm:py-12">
+                      <Briefcase className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-sm sm:text-base text-gray-500 mb-2">No jobs found</p>
+                      <p className="text-xs sm:text-sm text-gray-400">Try adjusting your search criteria or filters</p>
                     </div>
                   )}
                 </CardContent>
@@ -987,19 +908,19 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-8 border-t border-gray-700">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-3 mb-4 md:mb-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg">
-                <FileText className="w-6 h-6 text-white" />
+      <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-6 sm:py-8 border-t border-gray-700">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg">
+                <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <span className="text-xl font-bold">VitaeBot</span>
+              <div className="text-center sm:text-left">
+                <span className="text-lg sm:text-xl font-bold">VitaeBot</span>
                 <p className="text-xs text-gray-400">Professional CV Builder</p>
               </div>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 VitaeBot. All rights reserved.</p>
+            <p className="text-gray-400 text-xs sm:text-sm text-center">© 2025 VitaeBot. All rights reserved.</p>
           </div>
         </div>
       </footer>
