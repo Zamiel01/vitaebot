@@ -312,7 +312,7 @@ export default function Dashboard() {
   }
 
   const handleCreateNewCV = () => {
-    router.push("/select")
+    router.push("/option")
   }
 
   const formatDate = (dateString: string | null) => {
